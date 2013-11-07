@@ -20,12 +20,12 @@ import           Text.Printf
 instance Arbitrary ByteString where
   arbitrary = S.pack `liftM` arbitrary
 
-data K2 = K2 ByteString deriving Show
+newtype K2 = K2 ByteString deriving Show
 instance Arbitrary K2 where
   arbitrary = K2 `liftM` (arbitrary `suchThat` (\x -> S.length x == 32))
 
 --------------------------------------------------------------------------------
--- Signatures
+-- Tests
 
 roundtrip :: K2 -> ByteString -> Bool
 roundtrip (K2 k) xs = verify k' (authenticate k' xs) xs

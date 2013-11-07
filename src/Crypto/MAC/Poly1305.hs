@@ -33,7 +33,7 @@ import qualified Data.ByteString          as S
 import           Data.ByteString.Internal (create)
 import           Data.ByteString.Unsafe
 
-data Key = Key ByteString
+newtype Key = Key ByteString
   deriving (Eq, Show, Ord)
 
 key :: ByteString -> Maybe Key
@@ -41,7 +41,7 @@ key xs | S.length xs /= onetimeauthKEYBYTES = Nothing
        | otherwise = Just (Key xs)
 
 -- | An authenticator.
-data Auth = Auth { unAuth :: ByteString }
+newtype Auth = Auth { unAuth :: ByteString }
   deriving (Eq, Show, Ord)
 
 authenticate :: Key
