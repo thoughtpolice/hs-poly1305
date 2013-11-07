@@ -1,0 +1,119 @@
+name:                poly1305
+version:             0.0.0.0
+category:            Cryptography
+license:             MIT
+synopsis:            poly1305 message-authentication codes
+homepage:            http://thoughtpolice.github.com/hs-poly1305
+bug-reports:         http://github.com/thoughtpolice/hs-poly1305/issues
+license-file:        LICENSE.txt
+copyright:           Copyright (c) Austin Seipp 2013
+author:              Austin Seipp
+maintainer:          Austin Seipp <aseipp@pobox.com>
+build-type:          Simple
+cabal-version:       >=1.10
+tested-with:         GHC == 6.12.3, GHC == 7.0.1, GHC == 7.0.2, GHC == 7.0.3,
+                     GHC == 7.0.4,  GHC == 7.2.1, GHC == 7.2.2, GHC == 7.4.1,
+                     GHC == 7.4.2,  GHC == 7.6.1,  GHC == 7.6.2, GHC == 7.6.3
+
+description:
+  This package provides @poly1305@, a state of the art
+  message-authentication code (MAC.)
+  .
+  The underlying implementation uses the @ref@ code of @poly1305@ from
+  SUPERCOP, and should be relatively fast.
+  .
+  For more information visit <http://cr.yp.to/mac.html>.
+
+extra-source-files:
+  .travis.yml
+  AUTHORS.txt
+  README.md
+  CONTRIBUTING.md
+  CHANGELOG.md
+  src/cbits/*.c
+  src/cbits/include/*.h
+
+source-repository head
+  type: git
+  location: https://github.com/thoughtpolice/hs-poly1305.git
+
+-------------------------------------------------------------------------------
+-- Flags
+
+flag test-properties
+  default: True
+  manual: True
+
+flag test-hlint
+  default: True
+  manual: True
+
+-------------------------------------------------------------------------------
+-- Build pt 1: main project
+
+library
+  build-depends:
+    base >= 4 && < 5,
+    bytestring
+
+  exposed-modules:
+    Crypto.MAC.Poly1305
+
+  ghc-options:        -Wall -fwarn-tabs
+  default-language:   Haskell98
+  hs-source-dirs:     src
+  c-sources:          src/cbits/poly1305.c
+  include-dirs:       src/cbits/include
+
+-------------------------------------------------------------------------------
+-- Build pt 2: Tests
+
+test-suite properties
+  type: exitcode-stdio-1.0
+  main-is: properties.hs
+  ghc-options: -w
+  hs-source-dirs: tests
+  default-language:   Haskell98
+
+  if !flag(test-properties)
+    buildable: False
+  else
+    build-depends:
+      base,
+      poly1305,
+      bytestring,
+      QuickCheck  >= 2.4
+
+--
+-- Style/doc tests below
+--
+
+test-suite hlint
+  type: exitcode-stdio-1.0
+  main-is: hlint.hs
+  ghc-options: -w
+  hs-source-dirs: tests
+  default-language:   Haskell98
+
+  if !flag(test-hlint)
+    buildable: False
+  else
+    build-depends:
+      base,
+      hlint >= 1.7
+
+-------------------------------------------------------------------------------
+-- Build pt 3: benchmarks
+
+benchmark bench1
+  type:               exitcode-stdio-1.0
+  build-depends:
+    base >= 4 && < 5,
+    bytestring,
+    criterion,
+    deepseq,
+    poly1305
+
+  default-language:   Haskell98
+  hs-source-dirs:     benchmarks
+  main-is:            bench1.hs
