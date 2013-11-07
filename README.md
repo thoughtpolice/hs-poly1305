@@ -5,9 +5,8 @@
 [![Haskell](http://b.repl.ca/v1/language-haskell-lightgrey.png)](http://www.haskell.org)
 
 This package implements minimal bindings to the [poly1305][]
-message-authentication code.  function, which was an SHA-3
-finalist. It should be relatively easy to both depend on, or include
-outright in your executable/package itself.
+message-authentication code. It should be relatively easy to both
+depend on, or include outright in your executable/package itself.
 
 The underlying implementation is the `ref` code of `poly1305` from
 [SUPERCOP][], which was originally implemented by Dan J. Bernstein.
